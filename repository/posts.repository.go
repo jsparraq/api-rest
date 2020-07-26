@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 
-	"../entity"
 	"cloud.google.com/go/firestore"
+	"github.com/jsparraq/api-rest.git/entity"
+	"google.golang.org/api/iterator"
 )
 
 // PostRepository interface
@@ -22,57 +23,60 @@ func NewPostRepository() PostRepository {
 }
 
 const (
-	projectId      string = "pragmatic-reviews"
-	collectionName string = "post"
+	projectID      string = "pragmatic-reviews-7fc06"
+	collectionName string = "posts"
 )
 
 func (*repo) Save(post *entity.Post) (*entity.Post, error) {
 	ctx := context.Background()
-	client, err := firestore.NewClient(ctx, projectId)
+	client, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Fatalf("Fail to create a Firestore Client: %v", err)
 		return nil, err
 	}
-	
+
 	//This line will execute when the function return any object
 	defer client.Close()
-	_, _, err = client.Collection(collectionName).Add(cxt, map[string]interface{}{
-		"ID": post.ID,
+	_, _, err = client.Collection(collectionName).Add(ctx, map[string]interface{}{
+		"ID":    post.ID,
 		"Title": post.Title,
-		"Text": post.Text
+		"Text":  post.Text,
 	})
 
 	if err != nil {
 		log.Fatalf("Fail adding a new post: %v", err)
 		return nil, err
 	}
+	return post, nil
 }
 
 // FindAll
 func (*repo) FindAll() ([]entity.Post, error) {
 	ctx := context.Background()
-	client, err := firestore.NewClient(ctx, projectId)
+	client, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Fatalf("Fail to create a Firestore Client: %v", err)
 		return nil, err
 	}
-	
+
 	//This line will execute when the function return any object
 	defer client.Close()
 
-	var post []entity.Post
-	iterator := client.Collection(collectionName).Documents(ctx)
-
+	var posts []entity.Post
+	iter := client.Collection("posts").Documents(ctx)
 	for {
-		doc, err := iterator.Next()
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
 		if err != nil {
 			log.Fatalf("Fail to iterate the list of posts: %v", err)
 			return nil, err
 		}
 		post := entity.Post{
-			ID:    doc.Data()["ID"].(int)
-			Title: doc.Data()["Title"].(string)
-			Text:  doc.Data()["Text"].(string)
+			ID:    doc.Data()["ID"].(int64),
+			Title: doc.Data()["Title"].(string),
+			Text:  doc.Data()["Text"].(string),
 		}
 		posts = append(posts, post)
 	}

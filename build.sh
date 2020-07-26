@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Build app
-go build -o bin/app
+go build
 
 # run app
 ./bin/app

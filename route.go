@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/jsparraq/api-rest/entity"
-	"github.com/jsparraq/api-rest/repository"
+	"github.com/jsparraq/api-rest.git/entity"
+	"github.com/jsparraq/api-rest.git/repository"
 )
 
 var (
@@ -34,7 +34,7 @@ func addPost(resp http.ResponseWriter, req *http.Request) {
 		resp.Write([]byte(`{"error": "Error marshalling the request"}`))
 		return
 	}
-	post.ID = rand.Int()
+	post.ID = rand.Int63()
 	repo.Save(&post)
 	resp.WriteHeader(http.StatusOK)
 	json.NewEncoder(resp).Encode(post)
