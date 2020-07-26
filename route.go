@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/jsparraq/api-rest.git/entity"
-	"github.com/jsparraq/api-rest.git/repository"
+	"github.com/jsparraq/api-rest/entity"
+	"github.com/jsparraq/api-rest/repository"
 )
 
 var (

@@ -1,4 +1,4 @@
-module github.com/jsparraq/api-rest.git
+module github.com/jsparraq/api-rest
 
 go 1.14
 

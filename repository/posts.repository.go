@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	"github.com/jsparraq/api-rest.git/entity"
+	"github.com/jsparraq/api-rest/entity"
 	"google.golang.org/api/iterator"
 )
 
